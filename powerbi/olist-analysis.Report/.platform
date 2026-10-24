@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "olist-analysis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fb6ca28b-469b-4f62-91db-f5603d68b047"
+  }
+}

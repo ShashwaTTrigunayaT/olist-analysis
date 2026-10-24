@@ -1,0 +1,10 @@
+/// Row-level security limiting sellers to their own records.
+/// USERPRINCIPALNAME() must map to sellers_clean[seller_id]; replace it with a
+/// seller-to-user lookup once seller identities are available.
+role Seller
+	modelPermission: read
+
+	tablePermission sellers_clean = sellers_clean[seller_id] = USERPRINCIPALNAME()
+
+	annotation PBI_Id = 6277d99013eb47859f93d828349ffdda
+

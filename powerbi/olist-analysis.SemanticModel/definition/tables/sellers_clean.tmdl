@@ -1,0 +1,66 @@
+table sellers_clean
+	lineageTag: 64443a56-207b-4532-8d3a-c4fdfdf20671
+
+	measure 'Selected Seller' = SELECTEDVALUE(sellers_clean[seller_id], "Select a seller")
+		lineageTag: 4b1e6d2a-8f3c-4a7e-9c21-6d5f0b8a3e47
+
+	measure 'Selected Seller Location' =
+			VAR picked = COUNTROWS(VALUES(sellers_clean[seller_id]))
+			VAR allr   = COUNTROWS(ALL(sellers_clean))
+			VAR city   = SELECTEDVALUE(sellers_clean[seller_city])
+			VAR st     = SELECTEDVALUE(sellers_clean[seller_state])
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        picked = 1, city & ", " & st,
+			        picked = allr, "Select a seller",
+			        "Multiple sellers selected"
+			    )
+		lineageTag: 8d2f7c41-6b93-4e05-a7d8-1c3b5f902e64
+
+	column seller_id
+		dataType: string
+		lineageTag: dedb42dd-0ac8-475e-a8dc-ab9bdad2f9f7
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_zip_code_prefix
+		dataType: string
+		lineageTag: 559468d8-4245-4da6-a437-156086812844
+		summarizeBy: none
+		sourceColumn: seller_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_city
+		dataType: string
+		lineageTag: dfab5ff5-ca93-4c5d-94f7-c5fbc0eaeb5d
+		summarizeBy: none
+		sourceColumn: seller_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_state
+		dataType: string
+		lineageTag: 96c765a8-90b4-4ba6-90b3-2940e4d5cc04
+		summarizeBy: none
+		sourceColumn: seller_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sellers_clean = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Shashwat Trigunayat\OneDrive\Desktop\Admin\DA\olist-analysis\data\cleaned\sellers_clean.csv"),[Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"seller_id", type text}, {"seller_zip_code_prefix", type text}, {"seller_city", type text}, {"seller_state", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

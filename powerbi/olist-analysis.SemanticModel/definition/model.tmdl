@@ -1,0 +1,39 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["customers_clean","customer_geo_clean","order_items_clean","order_payments_clean","order_reviews_clean","orders_clean","products_clean","sellers_clean","seller_geo_clean"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table customers_clean
+ref table customer_geo_clean
+ref table order_items_clean
+ref table DateTableTemplate_a05becf2-c890-4596-8d2a-624cbbb35c5c
+ref table LocalDateTable_9bfac139-11e4-4d9c-a79f-18e8406d6677
+ref table order_payments_clean
+ref table order_reviews_clean
+ref table LocalDateTable_be172a7d-35ff-4477-a336-2cea3db85fb6
+ref table LocalDateTable_31022b0f-7ddb-4727-b385-e461eaba4af8
+ref table orders_clean
+ref table LocalDateTable_b242c255-809b-40f8-b632-7e932a8f0993
+ref table LocalDateTable_1f3131bc-0229-4c32-bb91-4efaa2be188c
+ref table LocalDateTable_2f46345a-9ae7-416f-ab42-95508e28905e
+ref table LocalDateTable_c1130361-3dc8-43c8-b54c-6493234f9ead
+ref table products_clean
+ref table sellers_clean
+ref table seller_geo_clean
+ref table DateTable
+ref table LocalDateTable_fe514bb3-3a66-4a08-a60e-11f8696cea31
+
+ref role Seller
+
+ref cultureInfo en-US
+

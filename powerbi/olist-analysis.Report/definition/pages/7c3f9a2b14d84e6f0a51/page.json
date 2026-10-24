@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "7c3f9a2b14d84e6f0a51",
+  "displayName": "Delivery & Customer Experience",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920
+}

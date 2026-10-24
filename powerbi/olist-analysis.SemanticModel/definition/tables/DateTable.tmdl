@@ -1,0 +1,70 @@
+table DateTable
+	lineageTag: 76f4e1ea-7f93-4c19-b8fb-385f76ca091d
+
+	column Date
+		formatString: General Date
+		lineageTag: 46af698c-f4d0-4a9d-9817-732d9cc24ffc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: ffb92027-6a9c-46eb-948f-70643bc2cb11
+			defaultHierarchy: LocalDateTable_fe514bb3-3a66-4a08-a60e-11f8696cea31.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR(DateTable[Date].[Date])
+		formatString: 0
+		lineageTag: f741fa71-914e-46a0-810d-bc7c89caf53d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number' = MONTH(DateTable[Date])
+		formatString: 0
+		lineageTag: ccc6e43a-f7b7-45f3-a122-f091c6ca36e0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name' = FORMAT(DateTable[Date],"MMM")
+		lineageTag: 49833c82-8797-4756-a45b-c91a65653c52
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter = "Q" & QUARTER(DateTable[Date])
+		lineageTag: d2ad3ea1-f5da-4d93-9650-1ac1df38fd31
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month = FORMAT(DateTable[Date], "MMM") & " '" & FORMAT(DateTable[Date], "YY")
+		lineageTag: 9de62861-06b9-4a07-a9f9-addb30d651e9
+		summarizeBy: none
+		sortByColumn: YearMonthIndex
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthIndex = YEAR(DateTable[Date]) * 100 + MONTH(DateTable[Date])
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7978c372-6381-4ca2-83d6-0876d1ee338d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = calculated
+		mode: import
+		source =
+				
+				CALENDAR (
+				    DATE ( 2016, 9, 1 ),
+				    DATE ( 2018, 8, 31 )
+				)
+
+	annotation PBI_Id = d6605e648db84187bc9a185c1cd0d362
+

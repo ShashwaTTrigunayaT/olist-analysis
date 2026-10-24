@@ -1,0 +1,160 @@
+table order_items_clean
+	lineageTag: 66f95cf2-48a8-463c-a23f-9dc6e6a53128
+
+	measure 'Total Sales' = SUM(order_items_clean[price])
+		formatString: R$ #,0.00
+		lineageTag: a9d3962d-a102-4dfa-8297-ae48369978ab
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Orders' = DISTINCTCOUNT(order_items_clean[order_id])
+		formatString: 0
+		lineageTag: 821d6a59-d8da-47f1-ba70-6fae77ebb7a7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Freight' = SUM(order_items_clean[freight_value])
+		formatString: R$ #,0.00
+		lineageTag: 31aea660-8266-495c-ba90-7e19abd74975
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Order Value' = DIVIDE([Total Sales], [Total Orders])
+		formatString: R$ #,0.00
+		lineageTag: 054d087d-6e08-4a39-a310-7e06048c8f09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales Change Pct' =
+			VAR endDate  = MAX(orders_clean[order_purchase_timestamp])
+			VAR backOff  = EDATE(endDate, -11)
+			VAR curStart = DATE(YEAR(backOff), MONTH(backOff), 1)
+			VAR prevEnd  = curStart - 1
+			VAR backPre  = EDATE(prevEnd, -11)
+			VAR prevStart = DATE(YEAR(backPre), MONTH(backPre), 1)
+			VAR cur  = CALCULATE([Total Sales], DateTable[Date] >= curStart, DateTable[Date] <= endDate)
+			VAR prev = CALCULATE([Total Sales], DateTable[Date] >= prevStart, DateTable[Date] <= prevEnd)
+			RETURN
+			    IF(NOT ISBLANK(prev) && prev <> 0, ROUND(DIVIDE(cur - prev, prev) * 100, 1))
+		formatString: 0.0\%;-0.0\%
+		lineageTag: 16999ebb-23cf-45ec-89b2-e1e02e3f6a91
+
+	measure 'Orders Change Pct' =
+			VAR endDate  = MAX(orders_clean[order_purchase_timestamp])
+			VAR backOff  = EDATE(endDate, -11)
+			VAR curStart = DATE(YEAR(backOff), MONTH(backOff), 1)
+			VAR prevEnd  = curStart - 1
+			VAR backPre  = EDATE(prevEnd, -11)
+			VAR prevStart = DATE(YEAR(backPre), MONTH(backPre), 1)
+			VAR cur  = CALCULATE([Total Orders], DateTable[Date] >= curStart, DateTable[Date] <= endDate)
+			VAR prev = CALCULATE([Total Orders], DateTable[Date] >= prevStart, DateTable[Date] <= prevEnd)
+			RETURN
+			    IF(NOT ISBLANK(prev) && prev <> 0, ROUND(DIVIDE(cur - prev, prev) * 100, 1))
+		formatString: 0.0\%;-0.0\%
+		lineageTag: 7c4f5a1e-9b2d-4e63-8f10-3a5d2c7b6e48
+
+	measure 'AOV Change Pct' =
+			VAR endDate  = MAX(orders_clean[order_purchase_timestamp])
+			VAR backOff  = EDATE(endDate, -11)
+			VAR curStart = DATE(YEAR(backOff), MONTH(backOff), 1)
+			VAR prevEnd  = curStart - 1
+			VAR backPre  = EDATE(prevEnd, -11)
+			VAR prevStart = DATE(YEAR(backPre), MONTH(backPre), 1)
+			VAR cur  = CALCULATE([Avg Order Value], DateTable[Date] >= curStart, DateTable[Date] <= endDate)
+			VAR prev = CALCULATE([Avg Order Value], DateTable[Date] >= prevStart, DateTable[Date] <= prevEnd)
+			RETURN
+			    IF(NOT ISBLANK(prev) && prev <> 0, ROUND(DIVIDE(cur - prev, prev) * 100, 1))
+		formatString: 0.0\%;-0.0\%
+		lineageTag: 2d8e6c34-51a7-4b09-9e72-c4f183a95d61
+
+	measure 'Freight Change Pct' =
+			VAR endDate  = MAX(orders_clean[order_purchase_timestamp])
+			VAR backOff  = EDATE(endDate, -11)
+			VAR curStart = DATE(YEAR(backOff), MONTH(backOff), 1)
+			VAR prevEnd  = curStart - 1
+			VAR backPre  = EDATE(prevEnd, -11)
+			VAR prevStart = DATE(YEAR(backPre), MONTH(backPre), 1)
+			VAR cur  = CALCULATE([Total Freight], DateTable[Date] >= curStart, DateTable[Date] <= endDate)
+			VAR prev = CALCULATE([Total Freight], DateTable[Date] >= prevStart, DateTable[Date] <= prevEnd)
+			RETURN
+			    IF(NOT ISBLANK(prev) && prev <> 0, ROUND(DIVIDE(cur - prev, prev) * 100, 1))
+		formatString: 0.0\%;-0.0\%
+		lineageTag: b6a1f0d2-3c74-4e58-8a91-5f2d7b4c0e93
+
+	column order_id
+		dataType: string
+		lineageTag: 3f1c8a52-7d4e-4b96-9c1a-6e2f5d8b0a37
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b47d1e9-2a6c-4f03-b5d8-1c9a7e3f6b24
+		summarizeBy: sum
+		sourceColumn: order_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: c2e9a4b7-6f18-4d35-8a70-9b3c1e5f2d86
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: 5d3a8c21-9e47-4b6f-a0c2-7f8e1d4b3a95
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipping_limit_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 91f4c7e3-8b25-4a60-b3d9-2e6f0a8c5d17
+		summarizeBy: none
+		sourceColumn: shipping_limit_date
+
+		variation Variation
+			isDefault
+			relationship: 5812adf9-9a1e-4a3f-b5c2-2b366f5318cf
+			defaultHierarchy: LocalDateTable_9bfac139-11e4-4d9c-a79f-18e8406d6677.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		formatString: R$ #,0.00
+		lineageTag: a7b3e2f8-4c19-4d72-9b05-6f8a1e3c2d94
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+	column freight_value
+		dataType: double
+		formatString: R$ #,0.00
+		lineageTag: e4c8b1a6-7f32-4b95-8d10-3a2c9e7f4b58
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_items_clean = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Shashwat Trigunayat\OneDrive\Desktop\Admin\DA\olist-analysis\data\cleaned\order_items_clean.csv"),[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"order_id", type text}, {"order_item_id", Int64.Type}, {"product_id", type text}, {"seller_id", type text}, {"shipping_limit_date", type datetime}, {"price", type number}, {"freight_value", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

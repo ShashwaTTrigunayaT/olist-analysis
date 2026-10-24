@@ -1,0 +1,79 @@
+relationship 5812adf9-9a1e-4a3f-b5c2-2b366f5318cf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: order_items_clean.shipping_limit_date
+	toColumn: LocalDateTable_9bfac139-11e4-4d9c-a79f-18e8406d6677.Date
+
+relationship 0604916f-6bd5-4ae8-a1bf-497d177d5e7b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: order_reviews_clean.review_creation_date
+	toColumn: LocalDateTable_be172a7d-35ff-4477-a336-2cea3db85fb6.Date
+
+relationship 6942f3b8-851e-4814-b86f-afd6c9243c88
+	joinOnDateBehavior: datePartOnly
+	fromColumn: order_reviews_clean.review_answer_timestamp
+	toColumn: LocalDateTable_31022b0f-7ddb-4727-b385-e461eaba4af8.Date
+
+relationship 978d1db4-b1c7-46d7-85b1-6815afd4a185
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders_clean.order_approved_at
+	toColumn: LocalDateTable_b242c255-809b-40f8-b632-7e932a8f0993.Date
+
+relationship 8619b4ff-ebe6-490f-9737-d36a060d5487
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders_clean.order_delivered_carrier_date
+	toColumn: LocalDateTable_1f3131bc-0229-4c32-bb91-4efaa2be188c.Date
+
+relationship 2e447654-fa80-47de-8248-6ffecf9945d5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders_clean.order_delivered_customer_date
+	toColumn: LocalDateTable_2f46345a-9ae7-416f-ab42-95508e28905e.Date
+
+relationship 0bfe2919-aaa8-48cd-a5c0-571104dcd23c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders_clean.order_estimated_delivery_date
+	toColumn: LocalDateTable_c1130361-3dc8-43c8-b54c-6493234f9ead.Date
+
+relationship AutoDetected_7d9442e0-b4dc-4fe1-84f7-a372dfda89ef
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: orders_clean.customer_id
+	toColumn: customers_clean.customer_id
+
+relationship AutoDetected_fd7cee6a-45b6-4e8f-80c9-d59b2a130a23
+	fromColumn: order_items_clean.order_id
+	toColumn: orders_clean.order_id
+
+relationship AutoDetected_821287e2-7efa-4bdb-8dee-e98880129638
+	fromColumn: order_payments_clean.order_id
+	toColumn: orders_clean.order_id
+
+relationship AutoDetected_06b31051-ac7f-41a2-96cb-d3be1df7c10c
+	fromColumn: order_reviews_clean.order_id
+	toColumn: orders_clean.order_id
+
+relationship AutoDetected_5da7b466-069a-4d99-aefc-8a17c82e6e19
+	fromColumn: order_items_clean.product_id
+	toColumn: products_clean.product_id
+
+relationship AutoDetected_5b38a62f-5eb8-488e-9bc1-c6e09e327a00
+	fromColumn: order_items_clean.seller_id
+	toColumn: sellers_clean.seller_id
+
+relationship fb808d93-3952-7290-373f-887b66f2271c
+	fromColumn: sellers_clean.seller_zip_code_prefix
+	toColumn: customer_geo_clean.geolocation_zip_code_prefix
+
+relationship aa80ba71-98aa-5274-8556-5f97ffaed997
+	fromColumn: customers_clean.customer_zip_code_prefix
+	toColumn: seller_geo_clean.geolocation_zip_code_prefix
+
+relationship ffb92027-6a9c-46eb-948f-70643bc2cb11
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.Date
+	toColumn: LocalDateTable_fe514bb3-3a66-4a08-a60e-11f8696cea31.Date
+
+relationship 87b755fc-414f-8c18-111a-7d3e7df39d68
+	joinOnDateBehavior: datePartOnly
+	fromColumn: orders_clean.order_purchase_timestamp
+	toColumn: DateTable.Date
+

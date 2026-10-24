@@ -1,0 +1,104 @@
+table order_reviews_clean
+	lineageTag: 579cacf6-ab25-4721-a8c6-7378c7781bcf
+
+	measure 'Avg Review Score' = AVERAGE(order_reviews_clean[review_score])
+		formatString: 0.00
+		lineageTag: 6c1d8e3f-2a74-4b90-8e15-9f3c7a2b6d41
+
+	measure 'Total Reviews' = COUNTROWS(order_reviews_clean)
+		formatString: 0
+		lineageTag: 8a5b2c7e-1f93-4d68-b7a0-3e6c9d4f2b15
+
+	measure 'On-Time Avg Review Score' = CALCULATE([Avg Review Score], orders_clean[Delivery Status] = "On time")
+		formatString: 0.00
+		lineageTag: b67f37c8-b52a-478b-a9c6-6ef62faaf12e
+
+	measure 'Late Avg Review Score' = CALCULATE([Avg Review Score], orders_clean[Delivery Status] = "Late delivery")
+		formatString: 0.00
+		lineageTag: 1422a39c-1ad0-48d7-8719-cf418f9110e1
+
+	measure 'Score Gap' = [On-Time Avg Review Score] - [Late Avg Review Score]
+		formatString: 0.00
+		lineageTag: 94dae6f5-c5dc-4c4c-b5bc-8a138a5d1208
+
+	column review_id
+		dataType: string
+		lineageTag: d57222b5-7155-484c-b641-e2dd22b86d03
+		summarizeBy: none
+		sourceColumn: review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: a5dcba12-74fe-4d80-82fd-184430f618c3
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e7a78bf-7dfd-45e2-a304-22645aea86d0
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_title
+		dataType: string
+		lineageTag: 7a9688dc-f024-41a0-bf22-fa742ebc83ca
+		summarizeBy: none
+		sourceColumn: review_comment_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_message
+		dataType: string
+		lineageTag: 7ea4ab62-d416-48d5-aa67-281e0bbb517a
+		summarizeBy: none
+		sourceColumn: review_comment_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_creation_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a163a149-bf7c-4e13-a658-b51c5b723125
+		summarizeBy: none
+		sourceColumn: review_creation_date
+
+		variation Variation
+			isDefault
+			relationship: 0604916f-6bd5-4ae8-a1bf-497d177d5e7b
+			defaultHierarchy: LocalDateTable_be172a7d-35ff-4477-a336-2cea3db85fb6.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_answer_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5dad029b-aeca-402c-9cb6-dc5e0e5a6bfc
+		summarizeBy: none
+		sourceColumn: review_answer_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 6942f3b8-851e-4814-b86f-afd6c9243c88
+			defaultHierarchy: LocalDateTable_31022b0f-7ddb-4727-b385-e461eaba4af8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_reviews_clean = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Shashwat Trigunayat\OneDrive\Desktop\Admin\DA\olist-analysis\data\cleaned\order_reviews_clean.csv"),[Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"review_id", type text}, {"order_id", type text}, {"review_score", Int64.Type}, {"review_comment_title", type text}, {"review_comment_message", type text}, {"review_creation_date", type datetime}, {"review_answer_timestamp", type datetime}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
